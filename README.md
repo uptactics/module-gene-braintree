@@ -23,3 +23,10 @@ It is important to note that this fork removed the inlined copy of the Braintree
 ```
 
 This module has been tested with at least one production OpenMage 20.x website, but you should make sure to test it on a local or staging website pushing it live.
+
+UPDATE:
+
+Added carding attack mitigation code. IP's will be logged in redis with a failed count. If failed count reached, IP will be barred from further payments until N time has been reached.
+See setup under braintree credit cards
+
+
