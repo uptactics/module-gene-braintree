@@ -969,19 +969,28 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <comment><![CDATA[
-                                If an IP reaches this count in failed attempt, in N period (below), it will be blocked.
+                                If an IP reaches this count in failed attempt, it will be blocked for n period (below).
                             ]]></comment>
                         </ip_count_threshold>
 
+                        <ip_count_email_to translate="label">
+                            <label>Send report emails to</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>72</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </ip_count_email_to>
+
                         <ip_count_block_period translate="label">
-                            <label>IP count block period in minutes</label>
+                            <label>IP count block period in seconds</label>
                             <frontend_type>text</frontend_type>
                             <sort_order>74</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                             <comment><![CDATA[
-                                Block IP with exceeded threshold by this period in minutes
+                                Block IP with exceeded threshold by this period in seconds
                             ]]></comment>
                         </ip_count_block_period>
 
