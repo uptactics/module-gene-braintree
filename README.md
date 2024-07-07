@@ -26,7 +26,8 @@ This module has been tested with at least one production OpenMage 20.x website, 
 
 UPDATE:
 
-Added carding attack mitigation code. IP's will be logged in redis with a failed count. If failed count reached, IP will be barred from further payments until N time has been reached.
-See setup under braintree credit cards
+Added carding attack mitigation code. IP's will be logged in redis with a failed count. If configured failed count reached, IP will be barred from further payments until petiod has been reached.
+See setup under braintree credit cards.
+Clear cache or redis key : ```gene_braintree``` to clear all entries.
 
 
