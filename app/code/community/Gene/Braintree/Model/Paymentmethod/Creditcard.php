@@ -299,6 +299,9 @@ class Gene_Braintree_Model_Paymentmethod_Creditcard extends Gene_Braintree_Model
               }
             }
             $failedData[$remoteIp]['alerted'] = TRUE;
+            Mage::app()
+              ->getCache()
+              ->save(serialize($failedData), $cacheId, ['gene_braintree']);
             Mage::throwException(
               $this->_getHelper()
                 ->__('Your card payment has failed too many times, please try again later.')
