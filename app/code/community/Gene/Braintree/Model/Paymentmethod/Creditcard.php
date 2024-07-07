@@ -265,20 +265,20 @@ class Gene_Braintree_Model_Paymentmethod_Creditcard extends Gene_Braintree_Model
         if (isset($failedData[$remoteIp]) && is_array($failedData[$remoteIp]) && $failedData[$remoteIp]['count'] >= $this->_getConfig('ip_count_threshold')) {
           $dif = time() - $failedData[$remoteIp]['ts'];
           if ($dif > $this->_getConfig('ip_count_block_period')) {
-            $failedData[$remoteIp]['count'] = 0;
-            $failedData[$remoteIp]['ts'] = time();
             unset($failedData[$remoteIp]['alerted']);
             $mail = Mage::getModel('core/email');
-            $mail->setToEmail('lucas@proxiblue.com.au');
-            $mail->setBody('IP UN Banned: ' . $remoteIp . ' Time: ' . date('Y-m-d H:i:s'));
-            $mail->setSubject('IP UN Banned');
-            $mail->setFromEmail('lucas@proxiblue.com.au');
-            $mail->setType('text');// You can use Html or text as Mail format
+            $mail->setToEmail(Mage::getStoreConfig('payment/gene_braintree_creditcard/ip_count_email_to'));
+            $mail->setBody('IP UNBanned: ' . $remoteIp . '<br/>Count when banned was: ' . $failedData[$remoteIp]['count'] . '<br/>Time: ' . date('Y-m-d H:i:s'));
+            $mail->setSubject('IP UNBanned: ' . $remoteIp);
+            $mail->setFromEmail(Mage::getStoreConfig('contacts/email/recipient_email'));
+            $mail->setType('html');
             try {
               $mail->send();
-            } catch (Exception $e) {
-              //
+            } catch (Exception $ex) {
+              mage::log('IP UNBanned: ' . $remoteIp . ' Count when banned was : ' . $failedData[$remoteIp]['count'] . ' Time: ' . date('Y-m-d H:i:s'));
             }
+            $failedData[$remoteIp]['count'] = 0;
+            $failedData[$remoteIp]['ts'] = time();
             Mage::app()
               ->getCache()
               ->save(serialize($failedData), $cacheId, ['gene_braintree']);
@@ -286,20 +286,16 @@ class Gene_Braintree_Model_Paymentmethod_Creditcard extends Gene_Braintree_Model
           else {
             if (!isset($failedData[$remoteIp]['alerted'])) {
               $mail = Mage::getModel('core/email');
-              $mail->setToEmail('lucas@proxiblue.com.au');
-              $mail->setBody('IP Banned: ' . $remoteIp . ' Count: ' . $failedData[$remoteIp]['count'] . ' Time: ' . date('Y-m-d H:i:s'));
-              $mail->setSubject('IP Banned');
-              $mail->setFromEmail('lucas@proxiblue.com.au');
-              $mail->setType('text');// You can use Html or text as Mail format
-
+              $mail->setToEmail(Mage::getStoreConfig('payment/gene_braintree_creditcard/ip_count_email_to'));
+              $mail->setBody('IP Banned: ' . $remoteIp . '<br/>Count: ' . $failedData[$remoteIp]['count'] . '<br/>Time: ' . date('Y-m-d H:i:s'));
+              $mail->setSubject('IP Banned: ' . $remoteIp);
+              $mail->setFromEmail(Mage::getStoreConfig('contacts/email/recipient_email'));
+              $mail->setType('html');
               try {
                 $mail->send();
-                $failedData[$remoteIp]['alerted'] = TRUE;
-                Mage::app()
-                  ->getCache()
-                  ->save(serialize($failedData), $cacheId, ['gene_braintree']);
-              } catch (Exception $e) {
-                //
+              } catch (Exception $ex) {
+                Mage::getSingleton('core/session')
+                  ->addError('Unable to send braintree block email.');
               }
             }
             Mage::throwException(
