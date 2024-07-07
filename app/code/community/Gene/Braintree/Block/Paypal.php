@@ -104,7 +104,7 @@ class Gene_Braintree_Block_Paypal extends Mage_Payment_Block_Form
             return true;
         }
 
-        return false;
+        return true;
     }
 
 }

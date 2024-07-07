@@ -45,7 +45,7 @@ class Gene_Braintree_Block_Creditcard extends Mage_Payment_Block_Form_Cc
             return true;
         }
 
-        return false;
+        return true;
     }
 
     /**
